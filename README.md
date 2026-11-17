@@ -1,10 +1,5 @@
 # Comunidades en Ethereum + interpretación crítica con IA
 
-[![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![NetworkX](https://img.shields.io/badge/NetworkX-3.6-red)](https://networkx.org/)
-[![License](https://img.shields.io/badge/Licencia-Educativa-lightgrey)](#)
-[![Repo](https://img.shields.io/badge/GitHub-ethereum--comunidades--ia-181717?logo=github)](https://github.com/Claudio1993cg/ethereum-comunidades-ia)
-
 Análisis de una red de transacciones de Ethereum con **Louvain**, **PageRank** y evaluación crítica de hipótesis generadas con **ChatGPT**.
 
 **Autores:** Giuliana Rolando · Claudio Cantero
@@ -13,51 +8,104 @@ Análisis de una red de transacciones de Ethereum con **Louvain**, **PageRank** 
 
 ---
 
-## Resultados visuales
-
-### 1) PageRank del top 10 (comunidad más grande)
-
-La dirección líder concentra una importancia estructural claramente superior. La verificación en Python confirma un ratio de **130,92×** frente al segundo nodo.
-
-![PageRank top 10](docs/images/pagerank_top10.png)
-
-### 2) Comunidades detectadas con Louvain
-
-Mapa de la red coloreando las 5 comunidades más grandes. El resto se muestra en gris para legibilidad.
-
-![Comunidades Louvain](docs/images/comunidades_louvain.png)
-
----
-
 ## Flujo del proyecto
 
-Del dataset a la verificación crítica de la IA:
-
-![Flujo del proyecto](docs/images/flujo_proyecto.png)
+```mermaid
+flowchart TD
+    A[transactions.csv<br/>5000 txs] --> B[Limpieza y trazabilidad<br/>nulos · duplicados · seed 42 · SHA-256]
+    B --> C[Grafo dirigido DiGraph<br/>from_address → to_address]
+    C --> D[Centralidades<br/>Grado · PageRank · Betweenness]
+    C --> E[Louvain<br/>grafo no dirigido]
+    E --> F[Comunidad mayor<br/>467 nodos]
+    D --> G[Top 10 por PageRank]
+    F --> G
+    G --> H[ChatGPT<br/>hipótesis exploratorias]
+    G --> I[Verificación Python<br/>ratio 130.92×]
+    H --> J[Separar hechos vs hipótesis]
+    I --> J
+    J --> K[Informe IMRaD + reflexión ética]
+```
 
 ---
 
 ## Diagrama de componentes
 
-Cómo se conectan datos, notebook y salidas:
-
-![Diagrama de componentes](docs/images/componentes.png)
+```mermaid
+flowchart LR
+    subgraph Datos
+      CSV[transactions.csv]
+    end
+    subgraph Notebook[demo_final.ipynb]
+      P[Pandas]
+      NX[NetworkX]
+      PLT[Matplotlib]
+      IA[Interpretación con ChatGPT]
+    end
+    subgraph Salidas
+      PDF1[Informe IMRaD]
+      PDF2[Reflexión ética]
+      PDF3[Respuesta ChatGPT]
+    end
+    CSV --> P
+    P --> NX
+    NX --> PLT
+    NX --> IA
+    IA --> PDF3
+    NX --> PDF1
+    IA --> PDF2
+```
 
 ---
 
 ## Modelo UML del pipeline
 
-Clases conceptuales del análisis (datos → grafo → métricas → IA → verificación):
-
-![UML del pipeline](docs/images/uml_pipeline.png)
-
----
-
-## Secuencia: de datos a verificación
-
-Interacción entre dataset, NetworkX, ChatGPT y Python:
-
-![Secuencia de verificación](docs/images/secuencia_verificacion.png)
+```mermaid
+classDiagram
+    class Transaccion {
+      +from_address
+      +to_address
+      +block_number
+      +transaction_hash
+      +value
+    }
+    class GrafoEthereum {
+      +nodos
+      +aristas
+      +weight
+      +construir()
+    }
+    class Metricas {
+      +grado_entrada()
+      +grado_salida()
+      +pagerank()
+      +betweenness()
+    }
+    class Louvain {
+      +resolution
+      +seed
+      +detectar_comunidades()
+    }
+    class Top10Comunidad {
+      +ordenar_por_pagerank()
+      +desempate_alfabetico()
+    }
+    class InterpreteIA {
+      +generar_hipotesis()
+      +separar_hechos()
+    }
+    class Verificacion {
+      +ratio_pagerank()
+      +asserts_consistencia()
+    }
+    Transaccion --> GrafoEthereum
+    GrafoEthereum --> Metricas
+    GrafoEthereum --> Louvain
+    Louvain --> Top10Comunidad
+    Metricas --> Top10Comunidad
+    Top10Comunidad --> InterpreteIA
+    Top10Comunidad --> Verificacion
+    InterpreteIA --> Verificacion
+```
 
 ---
 
@@ -110,9 +158,8 @@ pip install pandas==3.0.5 networkx==3.6.1 matplotlib numpy==2.5.2 ipykernel
 
 | Archivo | Descripción |
 |---------|-------------|
-| `demo_final.ipynb` | Notebook completo con código y salidas |
+| `demo_final.ipynb` | Notebook con código, resultados y visualizaciones |
 | `transactions.csv` | Dataset de transacciones |
-| `docs/images/` | Figuras de resultados para el README |
 | `Informe_IMRaD_Actividad3.pdf` | Informe académico |
 | `Reflexion_Etica_Actividad3.pdf` | Uso responsable de IA |
 | `Respuesta_Original_ChatGPT.pdf` | Evidencia de la interacción con IA |
@@ -144,5 +191,3 @@ Proyecto académico de Big Data — demo integradora con IA.
 
 - **Giuliana Rolando**
 - **Claudio Cantero**
-
-Repo: [Claudio1993cg/ethereum-comunidades-ia](https://github.com/Claudio1993cg/ethereum-comunidades-ia)
