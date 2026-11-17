@@ -1,63 +1,250 @@
-# Comunidades en Ethereum + interpretación con IA
+# Comunidades en Ethereum + interpretación crítica con IA
+
+[![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![NetworkX](https://img.shields.io/badge/NetworkX-3.6-red)](https://networkx.org/)
+[![License](https://img.shields.io/badge/Licencia-Educativa-lightgrey)](#)
+[![Repo](https://img.shields.io/badge/GitHub-ethereum--comunidades--ia-181717?logo=github)](https://github.com/Claudio1993cg/ethereum-comunidades-ia)
 
 Análisis de una red de transacciones de Ethereum con **Louvain**, **PageRank** y evaluación crítica de hipótesis generadas con **ChatGPT**.
 
 > Objetivo: pasar de métricas de red a hipótesis interpretables, **sin confundir hipótesis con hechos**.
 
-## Qué hace este proyecto
+---
 
-1. Limpia y valida un dataset de **5.000** transacciones (`from_address` → `to_address`).
-2. Construye un grafo dirigido (**5.620** nodos, **4.601** aristas).
-3. Calcula centralidades (grado, PageRank, betweenness).
-4. Detecta comunidades con Louvain (**1.188** comunidades; la mayor tiene **467** nodos).
-5. Selecciona el **top 10** de esa comunidad por PageRank.
-6. Usa ChatGPT solo como apoyo interpretativo.
-7. Verifica en Python una afirmación cuantitativa de la IA: el hub tiene PageRank **130,92×** el del segundo nodo.
+## Resultados visuales
 
-## Stack
+### 1) PageRank del top 10 (comunidad más grande)
 
-- Python 3.13
-- pandas · NetworkX · matplotlib · NumPy
-- Jupyter Notebook
+La dirección líder concentra una importancia estructural claramente superior. La verificación en Python confirma un ratio de **130,92×** frente al segundo nodo.
+
+![PageRank top 10](docs/images/pagerank_top10.png)
+
+### 2) Comunidades detectadas con Louvain
+
+Mapa de la red coloreando las 5 comunidades más grandes. El resto se muestra en gris para legibilidad.
+
+![Comunidades Louvain](docs/images/comunidades_louvain.png)
+
+---
+
+## Flujo del proyecto
+
+```mermaid
+flowchart TD
+    A[transactions.csv<br/>5000 txs] --> B[Limpieza y trazabilidad<br/>nulos · duplicados · seed 42 · SHA-256]
+    B --> C[Grafo dirigido DiGraph<br/>from_address → to_address]
+    C --> D[Centralidades<br/>Grado · PageRank · Betweenness]
+    C --> E[Louvain<br/>grafo no dirigido]
+    E --> F[Comunidad mayor<br/>467 nodos]
+    D --> G[Top 10 por PageRank]
+    F --> G
+    G --> H[ChatGPT<br/>hipótesis exploratorias]
+    G --> I[Verificación Python<br/>ratio 130.92×]
+    H --> J[Separar hechos vs hipótesis]
+    I --> J
+    J --> K[Informe IMRaD + reflexión ética]
+```
+
+---
+
+## Diagrama de componentes
+
+```mermaid
+flowchart LR
+    subgraph Datos
+      CSV[transactions.csv]
+    end
+
+    subgraph Notebook["demo_final.ipynb"]
+      P[Pandas]
+      NX[NetworkX]
+      PLT[Matplotlib]
+      IA[Interpretación con ChatGPT]
+    end
+
+    subgraph Salidas
+      FIG1[pagerank_top10.png]
+      FIG2[comunidades_louvain.png]
+      PDF1[Informe IMRaD]
+      PDF2[Reflexión ética]
+      PDF3[Respuesta ChatGPT]
+    end
+
+    CSV --> P
+    P --> NX
+    NX --> PLT
+    NX --> IA
+    PLT --> FIG1
+    PLT --> FIG2
+    IA --> PDF3
+    NX --> PDF1
+    IA --> PDF2
+```
+
+---
+
+## Modelo UML del pipeline
+
+```mermaid
+classDiagram
+    class Transaccion {
+      +from_address
+      +to_address
+      +block_number
+      +transaction_hash
+      +value
+    }
+
+    class GrafoEthereum {
+      +nodos: direcciones
+      +aristas: from → to
+      +weight: repeticiones
+      +construir()
+    }
+
+    class Metricas {
+      +grado_entrada()
+      +grado_salida()
+      +pagerank(alpha=0.85, weight=None)
+      +betweenness()
+    }
+
+    class Louvain {
+      +resolution=1
+      +seed=42
+      +detectar_comunidades()
+    }
+
+    class Top10Comunidad {
+      +comunidad_id
+      +ordenar_por_pagerank()
+      +desempate_alfabetico()
+    }
+
+    class InterpreteIA {
+      +generar_hipotesis()
+      +separar_hechos()
+    }
+
+    class Verificacion {
+      +ratio_pagerank()
+      +asserts_consistencia()
+    }
+
+    Transaccion --> GrafoEthereum : alimenta
+    GrafoEthereum --> Metricas : calcula
+    GrafoEthereum --> Louvain : particiona
+    Louvain --> Top10Comunidad : selecciona
+    Metricas --> Top10Comunidad : ranking
+    Top10Comunidad --> InterpreteIA : input
+    Top10Comunidad --> Verificacion : 130.92×
+    InterpreteIA --> Verificacion : contraste crítico
+```
+
+---
+
+## Secuencia: de datos a verificación
+
+```mermaid
+sequenceDiagram
+    participant CSV as Dataset
+    participant NB as Notebook
+    participant NX as NetworkX
+    participant GPT as ChatGPT
+    participant PY as Verificación Python
+
+    CSV->>NB: 5000 transacciones
+    NB->>NB: Limpieza → 4999 txs válidas
+    NB->>NX: Construir DiGraph
+    NX-->>NB: 5620 nodos / 4601 aristas
+    NB->>NX: PageRank + Louvain
+    NX-->>NB: Comunidad 467 + top 10
+    NB->>GPT: Direcciones + PageRank
+    GPT-->>NB: Hipótesis + límites
+    NB->>PY: Comparar PageRank #1 / #2
+    PY-->>NB: 130.92× verificado
+```
+
+---
+
+## Números clave
+
+| Métrica | Valor |
+|--------|------:|
+| Transacciones originales | 5.000 |
+| Transacciones usadas | 4.999 |
+| Nodos | 5.620 |
+| Aristas únicas | 4.601 |
+| Comunidades Louvain | 1.188 |
+| Comunidad mayor | 467 nodos |
+| Ratio PageRank #1 / #2 | **130,92×** |
+| Semilla | 42 |
+
+**SHA-256** de `transactions.csv`:  
+`712bb757578f5430f2d67b5f8d445a057041bf2c011c835a730df863599fc2ab`
+
+---
+
+## Configuraciones (y por qué)
+
+| Técnica | Config | Motivo |
+|---------|--------|--------|
+| Grafo | `DiGraph` | Mandar ≠ recibir (`from` → `to`) |
+| Peso de arista | nº de txs | Frecuencia de relación, no monto ETH |
+| PageRank | `alpha=0.85` | Valor estándar / estable |
+| PageRank | `weight=None` | Evitar premiar spam de repeticiones |
+| Louvain | no dirigido | Densidad de conexión, no sentido de pago |
+| Louvain | `resolution=1` | Default, sin forzar tamaños |
+| Louvain | `seed=42` | Reproducibilidad |
+
+---
+
+## Stack e instalación
 
 ```bash
 pip install pandas==3.0.5 networkx==3.6.1 matplotlib numpy==2.5.2 ipykernel
 ```
 
-## Cómo ejecutar
+1. Clonar el repo  
+2. Abrir `demo_final.ipynb`  
+3. Verificar que `transactions.csv` esté en la misma carpeta  
+4. **Restart & Run All**
 
-1. Clonar este repositorio.
-2. Abrir `demo_final.ipynb` en VS Code o Jupyter.
-3. Verificar que `transactions.csv` esté en la misma carpeta.
-4. **Restart & Run All**.
+---
 
-## Archivos incluidos
+## Archivos del repositorio
 
 | Archivo | Descripción |
 |---------|-------------|
-| `demo_final.ipynb` | Notebook con código, resultados y visualizaciones |
+| `demo_final.ipynb` | Notebook completo con código y salidas |
 | `transactions.csv` | Dataset de transacciones |
+| `docs/images/` | Figuras de resultados para el README |
 | `Informe_IMRaD_Actividad3.pdf` | Informe académico |
 | `Reflexion_Etica_Actividad3.pdf` | Uso responsable de IA |
 | `Respuesta_Original_ChatGPT.pdf` | Evidencia de la interacción con IA |
 
-## Resultados clave
-
-- Transacciones usadas: **4.999** (se excluyó 1 registro sin destino).
-- Semilla de reproducibilidad: **42**.
-- SHA-256 de `transactions.csv`:  
-  `712bb757578f5430f2d67b5f8d445a057041bf2c011c835a730df863599fc2ab`
-- PageRank: `alpha=0.85`, `weight=None`.
-- Louvain: grafo no dirigido, `resolution=1`, `seed=42`.
+---
 
 ## Uso responsable de IA
 
 ChatGPT se usó para formular hipótesis sobre el top 10, pidiendo separar hechos de conjeturas.  
 La verificación cuantitativa (**130,92×**) se hizo en Python.  
-**No** se afirmaron identidades ni propietarios de direcciones sin evidencia externa.
+
+**Estructura ≠ identidad.**  
+No se afirmaron propietarios de direcciones sin evidencia externa (labels, tipo de cuenta, historial).
+
+---
 
 ## Posibles mejoras
 
-- Etiquetas públicas verificadas (p. ej. Etherscan) para el top 10.
-- Sensibilidad de parámetros (PageRank con/sin pesos, otras resoluciones de Louvain).
-- Historial más amplio y tipo de cuenta (contrato vs wallet).
+1. Etiquetas públicas verificadas (Etherscan) para el top 10  
+2. Sensibilidad de parámetros (PageRank con/sin pesos, otras resoluciones)  
+3. Historial más amplio y clasificación contrato vs wallet  
+4. Protocolo de verificación para cada afirmación numérica de la IA  
+
+---
+
+## Autor
+
+Proyecto académico de Big Data — demo integradora con IA.  
+Repo: [Claudio1993cg/ethereum-comunidades-ia](https://github.com/Claudio1993cg/ethereum-comunidades-ia)
