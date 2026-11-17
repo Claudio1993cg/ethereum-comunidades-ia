@@ -8,11 +8,58 @@ Análisis de una red de transacciones de Ethereum con **Louvain**, **PageRank** 
 
 ---
 
+## Estructura del repositorio
+
+```text
+ethereum-comunidades-ia/
+├── README.md
+├── demo_final.ipynb          # Notebook principal (código + resultados)
+├── data/
+│   ├── README.md             # Descripción del dataset
+│   └── transactions.csv      # Datos de transacciones Ethereum
+└── informes/
+    ├── README.md
+    ├── Informe_IMRaD_Actividad3.pdf
+    ├── Reflexion_Etica_Actividad3.pdf
+    └── Respuesta_Original_ChatGPT.pdf
+```
+
+| Ruta | Qué contiene |
+|------|----------------|
+| `data/transactions.csv` | Dataset (origen, destino, bloque, hash, valor) |
+| `demo_final.ipynb` | Pipeline completo de análisis |
+| `informes/` | Informe IMRaD, reflexión ética y evidencia de ChatGPT |
+
+---
+
+## Dónde está la data y cómo se carga
+
+La data vive en **`data/transactions.csv`**.
+
+En el notebook:
+
+```python
+df = pd.read_csv("data/transactions.csv")
+```
+
+Columnas principales:
+
+- `from_address` → origen (quién manda)
+- `to_address` → destino (quién recibe)
+- `block_number`, `transaction_hash`, `value`
+
+Más detalle en [`data/README.md`](data/README.md).
+
+**Integridad del dataset (SHA-256):**  
+`712bb757578f5430f2d67b5f8d445a057041bf2c011c835a730df863599fc2ab`
+
+---
+
 ## Flujo del proyecto
 
 ```mermaid
 flowchart TD
-    A[transactions.csv<br/>5000 txs] --> B[Limpieza y trazabilidad<br/>nulos · duplicados · seed 42 · SHA-256]
+    A[data/transactions.csv<br/>5000 txs] --> B[Limpieza y trazabilidad<br/>nulos · duplicados · seed 42 · SHA-256]
     B --> C[Grafo dirigido DiGraph<br/>from_address → to_address]
     C --> D[Centralidades<br/>Grado · PageRank · Betweenness]
     C --> E[Louvain<br/>grafo no dirigido]
@@ -23,7 +70,7 @@ flowchart TD
     G --> I[Verificación Python<br/>ratio 130.92×]
     H --> J[Separar hechos vs hipótesis]
     I --> J
-    J --> K[Informe IMRaD + reflexión ética]
+    J --> K[informes/ IMRaD + ética]
 ```
 
 ---
@@ -33,7 +80,7 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph Datos
-      CSV[transactions.csv]
+      CSV[data/transactions.csv]
     end
     subgraph Notebook[demo_final.ipynb]
       P[Pandas]
@@ -41,7 +88,7 @@ flowchart LR
       PLT[Matplotlib]
       IA[Interpretación con ChatGPT]
     end
-    subgraph Salidas
+    subgraph Informes
       PDF1[Informe IMRaD]
       PDF2[Reflexión ética]
       PDF3[Respuesta ChatGPT]
@@ -122,9 +169,6 @@ classDiagram
 | Ratio PageRank #1 / #2 | **130,92×** |
 | Semilla | 42 |
 
-**SHA-256** de `transactions.csv`:  
-`712bb757578f5430f2d67b5f8d445a057041bf2c011c835a730df863599fc2ab`
-
 ---
 
 ## Configuraciones (y por qué)
@@ -141,28 +185,18 @@ classDiagram
 
 ---
 
-## Stack e instalación
+## Cómo ejecutar
 
 ```bash
 pip install pandas==3.0.5 networkx==3.6.1 matplotlib numpy==2.5.2 ipykernel
 ```
 
-1. Clonar el repo  
-2. Abrir `demo_final.ipynb`  
-3. Verificar que `transactions.csv` esté en la misma carpeta  
-4. **Restart & Run All**
-
----
-
-## Archivos del repositorio
-
-| Archivo | Descripción |
-|---------|-------------|
-| `demo_final.ipynb` | Notebook con código, resultados y visualizaciones |
-| `transactions.csv` | Dataset de transacciones |
-| `Informe_IMRaD_Actividad3.pdf` | Informe académico |
-| `Reflexion_Etica_Actividad3.pdf` | Uso responsable de IA |
-| `Respuesta_Original_ChatGPT.pdf` | Evidencia de la interacción con IA |
+1. Clonar el repositorio  
+2. Abrir la carpeta raíz del proyecto  
+3. Verificar que exista `data/transactions.csv`  
+4. Abrir `demo_final.ipynb`  
+5. **Restart & Run All**  
+6. Revisar informes en `informes/`
 
 ---
 
