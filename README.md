@@ -15,8 +15,9 @@ ethereum-comunidades-ia/
 ├── README.md
 ├── demo_final.ipynb          # Notebook principal (código + resultados)
 ├── data/
-│   ├── README.md             # Descripción del dataset
+│   ├── README.md
 │   └── transactions.csv      # Datos de transacciones Ethereum
+├── docs/images/              # Diagramas y visualizaciones
 └── informes/
     ├── README.md
     ├── Informe_IMRaD_Actividad3.pdf
@@ -28,6 +29,7 @@ ethereum-comunidades-ia/
 |------|----------------|
 | `data/transactions.csv` | Dataset (origen, destino, bloque, hash, valor) |
 | `demo_final.ipynb` | Pipeline completo de análisis |
+| `docs/images/` | Flujos, UML y gráficos de resultados |
 | `informes/` | Informe IMRaD, reflexión ética y evidencia de ChatGPT |
 
 ---
@@ -55,104 +57,39 @@ Más detalle en [`data/README.md`](data/README.md).
 
 ---
 
+## Resultados visuales
+
+### PageRank del top 10
+
+![PageRank top 10](docs/images/pagerank_top10.png)
+
+### Comunidades Louvain
+
+![Comunidades Louvain](docs/images/comunidades_louvain.png)
+
+---
+
 ## Flujo del proyecto
 
-```mermaid
-flowchart TD
-    A[data/transactions.csv<br/>5000 txs] --> B[Limpieza y trazabilidad<br/>nulos · duplicados · seed 42 · SHA-256]
-    B --> C[Grafo dirigido DiGraph<br/>from_address → to_address]
-    C --> D[Centralidades<br/>Grado · PageRank · Betweenness]
-    C --> E[Louvain<br/>grafo no dirigido]
-    E --> F[Comunidad mayor<br/>467 nodos]
-    D --> G[Top 10 por PageRank]
-    F --> G
-    G --> H[ChatGPT<br/>hipótesis exploratorias]
-    G --> I[Verificación Python<br/>ratio 130.92×]
-    H --> J[Separar hechos vs hipótesis]
-    I --> J
-    J --> K[informes/ IMRaD + ética]
-```
+![Flujo del proyecto](docs/images/flujo_proyecto.png)
 
 ---
 
 ## Diagrama de componentes
 
-```mermaid
-flowchart LR
-    subgraph Datos
-      CSV[data/transactions.csv]
-    end
-    subgraph Notebook[demo_final.ipynb]
-      P[Pandas]
-      NX[NetworkX]
-      PLT[Matplotlib]
-      IA[Interpretación con ChatGPT]
-    end
-    subgraph Informes
-      PDF1[Informe IMRaD]
-      PDF2[Reflexión ética]
-      PDF3[Respuesta ChatGPT]
-    end
-    CSV --> P
-    P --> NX
-    NX --> PLT
-    NX --> IA
-    IA --> PDF3
-    NX --> PDF1
-    IA --> PDF2
-```
+![Diagrama de componentes](docs/images/componentes.png)
 
 ---
 
 ## Modelo UML del pipeline
 
-```mermaid
-classDiagram
-    class Transaccion {
-      +from_address
-      +to_address
-      +block_number
-      +transaction_hash
-      +value
-    }
-    class GrafoEthereum {
-      +nodos
-      +aristas
-      +weight
-      +construir()
-    }
-    class Metricas {
-      +grado_entrada()
-      +grado_salida()
-      +pagerank()
-      +betweenness()
-    }
-    class Louvain {
-      +resolution
-      +seed
-      +detectar_comunidades()
-    }
-    class Top10Comunidad {
-      +ordenar_por_pagerank()
-      +desempate_alfabetico()
-    }
-    class InterpreteIA {
-      +generar_hipotesis()
-      +separar_hechos()
-    }
-    class Verificacion {
-      +ratio_pagerank()
-      +asserts_consistencia()
-    }
-    Transaccion --> GrafoEthereum
-    GrafoEthereum --> Metricas
-    GrafoEthereum --> Louvain
-    Louvain --> Top10Comunidad
-    Metricas --> Top10Comunidad
-    Top10Comunidad --> InterpreteIA
-    Top10Comunidad --> Verificacion
-    InterpreteIA --> Verificacion
-```
+![UML del pipeline](docs/images/uml_pipeline.png)
+
+---
+
+## Secuencia: hipótesis → verificación
+
+![Secuencia de verificación](docs/images/secuencia_verificacion.png)
 
 ---
 
