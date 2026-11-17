@@ -7,6 +7,8 @@
 
 Análisis de una red de transacciones de Ethereum con **Louvain**, **PageRank** y evaluación crítica de hipótesis generadas con **ChatGPT**.
 
+**Autores:** Giuliana Rolando · Claudio Cantero
+
 > Objetivo: pasar de métricas de red a hipótesis interpretables, **sin confundir hipótesis con hechos**.
 
 ---
@@ -136,7 +138,11 @@ No se afirmaron propietarios de direcciones sin evidencia externa (labels, tipo 
 
 ---
 
-## Autor
+## Autores
 
-Proyecto académico de Big Data — demo integradora con IA.  
+Proyecto académico de Big Data — demo integradora con IA.
+
+- **Giuliana Rolando**
+- **Claudio Cantero**
+
 Repo: [Claudio1993cg/ethereum-comunidades-ia](https://github.com/Claudio1993cg/ethereum-comunidades-ia)
