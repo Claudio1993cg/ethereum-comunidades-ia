@@ -29,141 +29,33 @@ Mapa de la red coloreando las 5 comunidades más grandes. El resto se muestra en
 
 ## Flujo del proyecto
 
-```mermaid
-flowchart TD
-    A[transactions.csv<br/>5000 txs] --> B[Limpieza y trazabilidad<br/>nulos · duplicados · seed 42 · SHA-256]
-    B --> C[Grafo dirigido DiGraph<br/>from_address → to_address]
-    C --> D[Centralidades<br/>Grado · PageRank · Betweenness]
-    C --> E[Louvain<br/>grafo no dirigido]
-    E --> F[Comunidad mayor<br/>467 nodos]
-    D --> G[Top 10 por PageRank]
-    F --> G
-    G --> H[ChatGPT<br/>hipótesis exploratorias]
-    G --> I[Verificación Python<br/>ratio 130.92×]
-    H --> J[Separar hechos vs hipótesis]
-    I --> J
-    J --> K[Informe IMRaD + reflexión ética]
-```
+Del dataset a la verificación crítica de la IA:
+
+![Flujo del proyecto](docs/images/flujo_proyecto.png)
 
 ---
 
 ## Diagrama de componentes
 
-```mermaid
-flowchart LR
-    subgraph Datos
-      CSV[transactions.csv]
-    end
+Cómo se conectan datos, notebook y salidas:
 
-    subgraph Notebook["demo_final.ipynb"]
-      P[Pandas]
-      NX[NetworkX]
-      PLT[Matplotlib]
-      IA[Interpretación con ChatGPT]
-    end
-
-    subgraph Salidas
-      FIG1[pagerank_top10.png]
-      FIG2[comunidades_louvain.png]
-      PDF1[Informe IMRaD]
-      PDF2[Reflexión ética]
-      PDF3[Respuesta ChatGPT]
-    end
-
-    CSV --> P
-    P --> NX
-    NX --> PLT
-    NX --> IA
-    PLT --> FIG1
-    PLT --> FIG2
-    IA --> PDF3
-    NX --> PDF1
-    IA --> PDF2
-```
+![Diagrama de componentes](docs/images/componentes.png)
 
 ---
 
 ## Modelo UML del pipeline
 
-```mermaid
-classDiagram
-    class Transaccion {
-      +from_address
-      +to_address
-      +block_number
-      +transaction_hash
-      +value
-    }
+Clases conceptuales del análisis (datos → grafo → métricas → IA → verificación):
 
-    class GrafoEthereum {
-      +nodos: direcciones
-      +aristas: from → to
-      +weight: repeticiones
-      +construir()
-    }
-
-    class Metricas {
-      +grado_entrada()
-      +grado_salida()
-      +pagerank(alpha=0.85, weight=None)
-      +betweenness()
-    }
-
-    class Louvain {
-      +resolution=1
-      +seed=42
-      +detectar_comunidades()
-    }
-
-    class Top10Comunidad {
-      +comunidad_id
-      +ordenar_por_pagerank()
-      +desempate_alfabetico()
-    }
-
-    class InterpreteIA {
-      +generar_hipotesis()
-      +separar_hechos()
-    }
-
-    class Verificacion {
-      +ratio_pagerank()
-      +asserts_consistencia()
-    }
-
-    Transaccion --> GrafoEthereum : alimenta
-    GrafoEthereum --> Metricas : calcula
-    GrafoEthereum --> Louvain : particiona
-    Louvain --> Top10Comunidad : selecciona
-    Metricas --> Top10Comunidad : ranking
-    Top10Comunidad --> InterpreteIA : input
-    Top10Comunidad --> Verificacion : 130.92×
-    InterpreteIA --> Verificacion : contraste crítico
-```
+![UML del pipeline](docs/images/uml_pipeline.png)
 
 ---
 
 ## Secuencia: de datos a verificación
 
-```mermaid
-sequenceDiagram
-    participant CSV as Dataset
-    participant NB as Notebook
-    participant NX as NetworkX
-    participant GPT as ChatGPT
-    participant PY as Verificación Python
+Interacción entre dataset, NetworkX, ChatGPT y Python:
 
-    CSV->>NB: 5000 transacciones
-    NB->>NB: Limpieza → 4999 txs válidas
-    NB->>NX: Construir DiGraph
-    NX-->>NB: 5620 nodos / 4601 aristas
-    NB->>NX: PageRank + Louvain
-    NX-->>NB: Comunidad 467 + top 10
-    NB->>GPT: Direcciones + PageRank
-    GPT-->>NB: Hipótesis + límites
-    NB->>PY: Comparar PageRank #1 / #2
-    PY-->>NB: 130.92× verificado
-```
+![Secuencia de verificación](docs/images/secuencia_verificacion.png)
 
 ---
 

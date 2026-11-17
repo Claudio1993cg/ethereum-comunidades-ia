@@ -22,9 +22,12 @@ https://github.com/Claudio1993cg/ethereum-comunidades-ia
 
 #Python #NetworkScience #Ethereum #DataAnalytics #IA #BigData #OpenSource
 
-## Imágenes a adjuntar (carrusel)
+## Imágenes a adjuntar (carrusel recomendado)
 
-1. `docs/images/pagerank_top10.png` — desigualdad de PageRank  
-2. `docs/images/comunidades_louvain.png` — mapa de comunidades  
+1. `docs/images/flujo_proyecto.png` — flujo completo del análisis  
+2. `docs/images/pagerank_top10.png` — desigualdad de PageRank (130,92×)  
+3. `docs/images/comunidades_louvain.png` — mapa de comunidades  
+4. `docs/images/uml_pipeline.png` — modelo UML del pipeline  
+5. `docs/images/secuencia_verificacion.png` — secuencia hasta la verificación  
 
-Orden sugerido del carrusel: primero barras, después mapa.
+Si querés un carrusel corto (3 fotos): 1 → 2 → 3.
